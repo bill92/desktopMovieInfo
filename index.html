@@ -1,0 +1,47 @@
+
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css">
+</head>
+<body>
+  <h1 class="center-align">Movie Info</h1>
+
+    <form class="center-align">
+      <div>
+        <label>Input Moive Name</label>
+        <input id="ip" type="text" class="col s9" />
+      </div>
+      <button class="btn waves-effect waves-light red accent-4 pulse" type="submit">Get Info
+    <i class="material-icons right"></i>
+  </button>
+    </form>
+
+    <div id="result" class="center-align">
+
+    </div>
+
+<script>
+  const electron = require('electron');
+  const { ipcRenderer } = electron;
+
+  document.querySelector('form').addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const movieName = document.getElementById('ip').value;
+    console.log(movieName);
+    ipcRenderer.send('movie:submit', movieName);
+  });
+
+  ipcRenderer.on('movie:info', (event, info) => {
+    document.querySelector('#result').innerHTML = `
+                                                    <img src="${info.poster}" style="width: 250px;"/>
+                                                    <h1>${info.title}</h1>
+                                                    <h3>${info.year}</h3>
+                                                    <p>${info.plot}</p>
+                                                    <p>Starring: ${info.starring}</p>
+                                                    <p>Director: ${info.director}</p>
+                                                    `;
+  });
+</script>
+
+
+</body>
